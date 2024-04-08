@@ -147,6 +147,28 @@ public class ProductController {
         return list;
     }
 
+    public void getByStore() {
+        Object[] options = instanceModel().findAllStores().toArray();
+        if (options.length > 0) {
+            Store selectedOption = (Store) JOptionPane.showInputDialog(
+                    null,
+                    "Select the Store:\n",
+                    "Selecting a Store",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    options,
+                    options[0]);
+            if (selectedOption == null) {
+                JOptionPane.showMessageDialog(null, "No Store selected");
+            } else {
+                JOptionPane.showMessageDialog(null, "Filtered by Store: " + selectedOption.getName() + "\n" + getAll(instanceModel().findByStore(selectedOption.getId())));
+
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No Stores registered yet");
+        }
+    }
+
     //    METODO QUE SOLICITA AL USUARIO UN NOMBRE DE PRODUCTO PARA LUEGO ENVIARLO A EL MODELO Y FILTRAR POR ESTE STRING
     public void getByName() {
         String nameSearched = JOptionPane.showInputDialog(null, "Enter the name of the product you want to search");

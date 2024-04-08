@@ -70,7 +70,8 @@ public class Menus {
                     3. Update Product
                     4. Delete Product
                     5. Filter by Name
-                    6. Exit
+                    6. Filter by Store
+                    7. Exit
 
                     Choose an option:
 
@@ -97,6 +98,10 @@ public class Menus {
                     productController.getByName();
                     break;
                 case "6":
+//                    BUSCAR POR TIENDA
+                    productController.getByStore();
+                    break;
+                case "7":
 //                    MUESTRA UN MENSAJE ANTES DE VOLVER AL MENU PRINCIPAL
                     JOptionPane.showMessageDialog(null, "Going back to main menu");
                     break;
@@ -104,7 +109,7 @@ public class Menus {
                     JOptionPane.showMessageDialog(null, "Not a valid option");
                     break;
             }
-        } while (!option2.equals("6"));
+        } while (!option2.equals("7"));
     }
 
     public void purchasesMenu() {

@@ -153,6 +153,26 @@ public class ProductModel implements CRUD {
         return storesList;
     }
 
+    public List<Object> findByStore(int idStore) {
+        //        METODO PARA FILTRAR LOS REGISTROS DE PRODUCTOS USANDO LAS TIENDAS
+        List<Object> resultsList = new ArrayList<>();
+        String sql = "SELECT * FROM products WHERE idStore = ?;";
+        Connection objConnection = ConfigDB.openConnection();
+        try {
+            PreparedStatement objPrepare = objConnection.prepareStatement(sql);
+            objPrepare.setInt(1, idStore);
+            ResultSet objResult = objPrepare.executeQuery();
+            while (objResult.next()) {
+                resultsList.add(extractResultSet(objResult));
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+        ConfigDB.closeConnection();
+        //        DESPUÉS DE ALMACENAR LOS OBJETOS EN UNA LISTA LA RETORNA HACIA EL CONTROLLER
+        return resultsList;
+    }
+
     public boolean updateStock(int idProduct, int newStock) {
 //        ACTUALIZA EL STOCK DEL PRODUCTO
         boolean isUpdated = false;
