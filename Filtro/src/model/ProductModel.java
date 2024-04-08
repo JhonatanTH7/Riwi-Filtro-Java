@@ -135,6 +135,24 @@ public class ProductModel implements CRUD {
         return objStore;
     }
 
+    public List<Object> findAllStores() {
+        //        METODO QUE LISTA TODOS LOS REGISTROS EXISTENTES EN LA TABLA PERTENECIENTE A LA ENTIDAD
+        List<Object> storesList = new ArrayList<>();
+        String sql = "SELECT * FROM stores ORDER BY id ASC;";
+        Connection objConnection = ConfigDB.openConnection();
+        try {
+            ResultSet objResult = objConnection.prepareStatement(sql).executeQuery();
+            while (objResult.next()) {
+                storesList.add(extractResultSetStore(objResult));
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+        ConfigDB.closeConnection();
+        //        DESPUÉS DE ALMACENAR LOS OBJETOS EN UNA LISTA LA RETORNA HACIA EL CONTROLLER
+        return storesList;
+    }
+
     public boolean updateStock(int idProduct, int newStock) {
 //        ACTUALIZA EL STOCK DEL PRODUCTO
         boolean isUpdated = false;
@@ -158,5 +176,9 @@ public class ProductModel implements CRUD {
     private Product extractResultSet(ResultSet objResult) throws SQLException {
         //        RETORNA LA INSTANCIA DE LA ENTIDAD HABIENDO EXTRAÍDO LOS RESULTADOS DEL RESULTSET
         return new Product(objResult.getInt("id"), objResult.getString("name"), objResult.getInt("stock"), objResult.getDouble("price"), objResult.getInt("idStore"));
+    }
+
+    private Store extractResultSetStore(ResultSet objResult) throws SQLException {
+        return new Store(objResult.getInt("id"), objResult.getString("name"), objResult.getString("location"));
     }
 }

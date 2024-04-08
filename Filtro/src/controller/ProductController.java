@@ -1,6 +1,7 @@
 package controller;
 
 import entity.Product;
+import entity.Store;
 import model.ProductModel;
 
 import javax.swing.*;
@@ -18,9 +19,26 @@ public class ProductController {
             String name = JOptionPane.showInputDialog(null, "Enter the name of the Product");
             int stock = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the Stock of the Product"));
             double price = Double.parseDouble(JOptionPane.showInputDialog(null, "Enter the Price of the Product"));
-            int idStore = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the ID of the store"));
-            System.out.println(instanceModel().insert(new Product(name, stock, price, idStore)));
-        } catch (Exception e) {
+            Object[] options = instanceModel().findAllStores().toArray();
+            if (options.length > 0) {
+                Store selectedOption = (Store) JOptionPane.showInputDialog(
+                        null,
+                        "Select the Store:\n",
+                        "Selecting a Store",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        options,
+                        options[0]);
+                if (selectedOption == null) {
+                    JOptionPane.showMessageDialog(null, "No Store selected");
+                } else {
+                    System.out.println(instanceModel().insert(new Product(name, stock, price, selectedOption.getId())));
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "No Stores registered yet");
+            }
+        } catch (
+                Exception e) {
             JOptionPane.showMessageDialog(null, "Value entered is not valid");
             System.out.println(e.getMessage());
         }
@@ -45,11 +63,28 @@ public class ProductController {
                     selectedOption.setName(JOptionPane.showInputDialog(null, "Enter the new name of the Product", selectedOption.getName()));
                     selectedOption.setStock(Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the new Stock of the Product", selectedOption.getStock())));
                     selectedOption.setPrice(Double.parseDouble(JOptionPane.showInputDialog(null, "Enter the new Price of the Product", selectedOption.getPrice())));
-                    selectedOption.setIdStore(Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the new ID of the store where the Product is", selectedOption.getIdStore())));
-                    if (instanceModel().update(selectedOption)) {
-                        JOptionPane.showMessageDialog(null, "Product Updated successfully");
+                    Object[] storeOptions = instanceModel().findAllStores().toArray();
+                    if (storeOptions.length > 0) {
+                        Store selectedStore = (Store) JOptionPane.showInputDialog(
+                                null,
+                                "Select the new Store:\n",
+                                "Updating the Store",
+                                JOptionPane.QUESTION_MESSAGE,
+                                null,
+                                storeOptions,
+                                storeOptions[0]);
+                        if (selectedStore == null) {
+                            JOptionPane.showMessageDialog(null, "No Store selected");
+                        } else {
+                            selectedOption.setIdStore(selectedStore.getId());
+                            if (instanceModel().update(selectedOption)) {
+                                JOptionPane.showMessageDialog(null, "Product updated successfully");
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Couldn't update the Product");
+                            }
+                        }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Couldn't update the Product");
+                        JOptionPane.showMessageDialog(null, "No Stores registered yet");
                     }
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Value entered is not valid");
@@ -112,7 +147,7 @@ public class ProductController {
         return list;
     }
 
-//    METODO QUE SOLICITA AL USUARIO UN NOMBRE DE PRODUCTO PARA LUEGO ENVIARLO A EL MODELO Y FILTRAR POR ESTE STRING
+    //    METODO QUE SOLICITA AL USUARIO UN NOMBRE DE PRODUCTO PARA LUEGO ENVIARLO A EL MODELO Y FILTRAR POR ESTE STRING
     public void getByName() {
         String nameSearched = JOptionPane.showInputDialog(null, "Enter the name of the product you want to search");
         StringBuilder list = new StringBuilder("Filtered by Name: " + nameSearched + "\n");
