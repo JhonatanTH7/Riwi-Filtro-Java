@@ -47,7 +47,13 @@ INSERT INTO stores(name,location) VALUES("La de manolo", "Sabaneta"),
 
 SELECT * FROM stores;
 
+UPDATE stores 
+SET 
+    name = 'La cantina del mono'
+WHERE
+    id = 3;
 
+SELECT  products.id AS idProduct,stores.id AS idStore, stores.name AS storeName, stores.location AS storeLocation FROM products INNER JOIN stores ON products.idStore = stores.id WHERE products.id=1;
 
 
 

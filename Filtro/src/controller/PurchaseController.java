@@ -77,7 +77,6 @@ public class PurchaseController {
             } else {
                 JOptionPane.showMessageDialog(null, "No Clients registered yet");
             }
-
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Value entered is not valid");
             System.out.println(e.getMessage());
@@ -98,10 +97,9 @@ public class PurchaseController {
                         purchaseOptions,
                         purchaseOptions[0]);
                 if (selectedPurchase == null) {
-                    JOptionPane.showMessageDialog(null, "No Client selected");
+                    JOptionPane.showMessageDialog(null, "No Purchase selected");
                 } else {
-                    Date purchaseDate = (Date.valueOf(JOptionPane.showInputDialog(null, "Enter the new Date of the Purchase (YYYY-MM-DD)", selectedPurchase.getPurchaseDate())));
-                    int quantity = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the new Quantity of the Purchase", selectedPurchase.getQuantity()));
+                    Date purchaseDate = Date.valueOf(JOptionPane.showInputDialog(null, "Enter the new Date of the Purchase (YYYY-MM-DD)", selectedPurchase.getPurchaseDate()));
 
                     Object[] clientOptions = new ClientModel().findAll().toArray();
                     Object[] productOptions = new ProductModel().findAll().toArray();
@@ -110,7 +108,7 @@ public class PurchaseController {
                         Client selectedClient = (Client) JOptionPane.showInputDialog(
                                 null,
                                 "Select the new Client:\n",
-                                "Updating a Client",
+                                "Updating the Client",
                                 JOptionPane.QUESTION_MESSAGE,
                                 null,
                                 clientOptions,
@@ -121,8 +119,8 @@ public class PurchaseController {
                             if (productOptions.length > 0) {
                                 Product selectedProduct = (Product) JOptionPane.showInputDialog(
                                         null,
-                                        "Select the new Product:\n",
-                                        "Updating a Product",
+                                        "Select the new Product to Purchase:\n",
+                                        "Updating the Product Purchased",
                                         JOptionPane.QUESTION_MESSAGE,
                                         null,
                                         productOptions,
@@ -130,14 +128,34 @@ public class PurchaseController {
                                 if (selectedProduct == null) {
                                     JOptionPane.showMessageDialog(null, "No Product selected");
                                 } else {
-                                    selectedPurchase.setQuantity(quantity);
-                                    selectedPurchase.setPurchaseDate(purchaseDate);
-                                    selectedPurchase.setIdClient(selectedClient.getId());
-                                    selectedPurchase.setIdProduct(selectedProduct.getId());
-                                    if (instanceModel().update(selectedPurchase)) {
-                                        JOptionPane.showMessageDialog(null, "Purchase Updated successfully");
+                                    int quantity = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the new Quantity of the Purchase >> Actual Stock: " + selectedProduct.getStock(), selectedPurchase.getQuantity()));
+                                    int oldQuantity = selectedPurchase.getQuantity();
+                                    if (selectedProduct.getStock() >= quantity) {
+                                        selectedPurchase.setPurchaseDate(purchaseDate);
+                                        selectedPurchase.setQuantity(quantity);
+                                        selectedPurchase.setIdClient(selectedClient.getId());
+                                        selectedPurchase.setIdProduct(selectedProduct.getId());
+                                        if (instanceModel().update(selectedPurchase)) {
+                                            JOptionPane.showMessageDialog(null, "Purchase Updated successfully");
+
+                                            if (new ProductModel().updateStock(selectedProduct.getId(), (selectedProduct.getStock() - quantity + oldQuantity))) {
+                                                JOptionPane.showMessageDialog(null, "Stock updated successfully");
+                                                double normalPrice = selectedProduct.getPrice() * quantity;
+                                                Store objStore = new ProductModel().findStore(selectedProduct.getId());
+                                                StringBuilder bill = new StringBuilder("\n\n====================================== Bill ======================================\n\n");
+                                                bill.append("PRODUCT ==>     Name: ").append(selectedProduct.getName()).append("     Price: ").append(selectedProduct.getPrice()).append("     Quantity: ").append(quantity).append("\n");
+                                                bill.append("STORE ==>     Name: ").append(objStore.getName()).append("     Location: ").append(objStore.getLocation()).append("\n");
+                                                bill.append("CLIENT ==>     Name: ").append(selectedClient.getName()).append("     LastName: ").append(selectedClient.getLastName()).append("     Email: ").append(selectedClient.getEmail()).append("\n");
+                                                bill.append("\n\n\n\n").append("PRICE ==> ").append(normalPrice).append("          IVA ==> ").append(0.19 * normalPrice).append("\n").append("TOTAL PRICE: ").append(1.19 * normalPrice);
+                                                JOptionPane.showMessageDialog(null, bill);
+                                            } else {
+                                                JOptionPane.showMessageDialog(null, "Couldn't update the Stock");
+                                            }
+                                        } else {
+                                            JOptionPane.showMessageDialog(null, "Couldn't update the Purchase");
+                                        }
                                     } else {
-                                        JOptionPane.showMessageDialog(null, "Couldn't update the Purchase");
+                                        JOptionPane.showMessageDialog(null, "There is not enough Stock of the Product you want to Purchase >> Actual Stock: " + selectedProduct.getStock());
                                     }
                                 }
                             } else {
@@ -147,20 +165,17 @@ public class PurchaseController {
                     } else {
                         JOptionPane.showMessageDialog(null, "No Clients registered yet");
                     }
-
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "No Purchases registered yet");
             }
-
-
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Value entered is not valid");
             System.out.println(e.getMessage());
         }
     }
 
-//    LE PERMITE AL USUARIO SELECCIONAR ENTRE LOS REGISTROS EXISTENTES PARA ELIMINAR EL DESEADO, AL ESCOGER SE ENVIA EL ID AL MODELO QUE REALIZARA EL BORRADO EN LA BASE DE DATOS
+    //    LE PERMITE AL USUARIO SELECCIONAR ENTRE LOS REGISTROS EXISTENTES PARA ELIMINAR EL DESEADO, AL ESCOGER SE ENVIA EL ID AL MODELO QUE REALIZARA EL BORRADO EN LA BASE DE DATOS
     public void delete() {
         Object[] options = instanceModel().findAll().toArray();
         if (options.length > 0) {
@@ -192,12 +207,12 @@ public class PurchaseController {
         }
     }
 
-//    ENVIA LA LISTA GENERAL AL METODO GET-ALL QUE RECIBE LISTA COMO PARAMETRO Y LA CONCATENA MEDIANTE UN STRING BUILDER
+    //    ENVIA LA LISTA GENERAL AL METODO GET-ALL QUE RECIBE LISTA COMO PARAMETRO Y LA CONCATENA MEDIANTE UN STRING BUILDER
     public void getAll() {
         JOptionPane.showMessageDialog(null, getAll(instanceModel().findAll()));
     }
 
-//    RECIBE UNA LISTA COMO PARAMETRO Y LA CONCATENA EN UN STRING BUILDER PARA LUEGO RETORNARLA
+    //    RECIBE UNA LISTA COMO PARAMETRO Y LA CONCATENA EN UN STRING BUILDER PARA LUEGO RETORNARLA
     public StringBuilder getAll(List<Object> objectsList) {
         StringBuilder list = new StringBuilder("Purchases List:\n");
         if (objectsList.isEmpty()) {
@@ -211,7 +226,7 @@ public class PurchaseController {
         return list;
     }
 
-//    DA AL USUARIO LA OPORTUNIDAD DE ESCOGER ENTRE LOS PRODUCTOS EXISTENTES PARA LUEGO MEDIANTE EL SELECCIONADO FILTRAR LA LISTA DE COMPRAS, SE ENVIA EL ID AL MODELO PARA REALIZAR LA RESPECTIVA SENTENCIA SQL
+    //    DA AL USUARIO LA OPORTUNIDAD DE ESCOGER ENTRE LOS PRODUCTOS EXISTENTES PARA LUEGO MEDIANTE EL SELECCIONADO FILTRAR LA LISTA DE COMPRAS, SE ENVIA EL ID AL MODELO PARA REALIZAR LA RESPECTIVA SENTENCIA SQL
     public void getByProduct() {
         Object[] flightOptions = new ProductModel().findAll().toArray();
         if (flightOptions.length > 0) {
