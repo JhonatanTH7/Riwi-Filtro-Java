@@ -7,10 +7,12 @@ import javax.swing.*;
 import java.util.List;
 
 public class ProductController {
+    //    METODO QUE RETORNA INSTANCIA DEL MODELO DE LA ENTIDAD RESPECTIVA
     public ProductModel instanceModel() {
         return new ProductModel();
     }
 
+    //    METODO QUE RECOLECTA LOS ATRIBUTOS DE LA ENTIDAD PARA LUEGO ENVIARLA AL MODELO Y AGREGAR EL REGISTRO A LA BASE DE DATOS
     public void add() {
         try {
             String name = JOptionPane.showInputDialog(null, "Enter the name of the Product");
@@ -24,6 +26,7 @@ public class ProductController {
         }
     }
 
+    //RECOLECTA NUEVAMENTE LOS ATRIBUTOS DE LA ENTIDAD EN CASO DE QUE EL USUARIO DESEE ACTUALIZARLO, POSTERIORMENTE LO ENVIA AL MODELO PARA REALIZAR LA ACTUALIZACIÓN EN LA BASE DE DATOS
     public void update() {
         Object[] options = instanceModel().findAll().toArray();
         if (options.length > 0) {
@@ -58,6 +61,7 @@ public class ProductController {
         }
     }
 
+    //    LE PERMITE AL USUARIO SELECCIONAR ENTRE LOS REGISTROS EXISTENTES PARA ELIMINAR EL DESEADO, AL ESCOGER SE ENVIA EL ID AL MODELO QUE REALIZARA EL BORRADO EN LA BASE DE DATOS
     public void delete() {
         Object[] options = instanceModel().findAll().toArray();
         if (options.length > 0) {
@@ -89,10 +93,12 @@ public class ProductController {
         }
     }
 
+    //    ENVIA LA LISTA GENERAL AL METODO GET-ALL QUE RECIBE LISTA COMO PARAMETRO Y LA CONCATENA MEDIANTE UN STRING BUILDER
     public void getAll() {
         JOptionPane.showMessageDialog(null, getAll(instanceModel().findAll()));
     }
 
+    //    RECIBE UNA LISTA COMO PARAMETRO Y LA CONCATENA EN UN STRING BUILDER PARA LUEGO RETORNARLA
     public StringBuilder getAll(List<Object> objectsList) {
         StringBuilder list = new StringBuilder("Products List:\n");
         if (objectsList.isEmpty()) {
@@ -106,6 +112,7 @@ public class ProductController {
         return list;
     }
 
+//    METODO QUE SOLICITA AL USUARIO UN NOMBRE DE PRODUCTO PARA LUEGO ENVIARLO A EL MODELO Y FILTRAR POR ESTE STRING
     public void getByName() {
         String nameSearched = JOptionPane.showInputDialog(null, "Enter the name of the product you want to search");
         StringBuilder list = new StringBuilder("Filtered by Name: " + nameSearched + "\n");

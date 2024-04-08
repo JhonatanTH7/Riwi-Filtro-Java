@@ -7,11 +7,12 @@ import javax.swing.*;
 import java.util.List;
 
 public class ClientController {
-
+    //    METODO QUE RETORNA INSTANCIA DEL MODELO DE LA ENTIDAD RESPECTIVA
     public ClientModel instanceModel() {
         return new ClientModel();
     }
 
+    //    METODO QUE RECOLECTA LOS ATRIBUTOS DE LA ENTIDAD PARA LUEGO ENVIARLA AL MODELO Y AGREGAR EL REGISTRO A LA BASE DE DATOS
     public void add() {
         String name = JOptionPane.showInputDialog(null, "Enter the name of the Client");
         String lastName = JOptionPane.showInputDialog(null, "Enter the lastname of the Client");
@@ -19,6 +20,7 @@ public class ClientController {
         System.out.println(instanceModel().insert(new Client(name, lastName, email)));
     }
 
+    //RECOLECTA NUEVAMENTE LOS ATRIBUTOS DE LA ENTIDAD EN CASO DE QUE EL USUARIO DESEE ACTUALIZARLO, POSTERIORMENTE LO ENVIA AL MODELO PARA REALIZAR LA ACTUALIZACIÓN EN LA BASE DE DATOS
     public void update() {
         Object[] options = instanceModel().findAll().toArray();
         if (options.length > 0) {
@@ -47,6 +49,7 @@ public class ClientController {
         }
     }
 
+    //    LE PERMITE AL USUARIO SELECCIONAR ENTRE LOS REGISTROS EXISTENTES PARA ELIMINAR EL DESEADO, AL ESCOGER SE ENVIA EL ID AL MODELO QUE REALIZARA EL BORRADO EN LA BASE DE DATOS
     public void delete() {
         Object[] options = instanceModel().findAll().toArray();
         if (options.length > 0) {
@@ -78,10 +81,12 @@ public class ClientController {
         }
     }
 
+    //    ENVIA LA LISTA GENERAL AL METODO GET-ALL QUE RECIBE LISTA COMO PARAMETRO Y LA CONCATENA MEDIANTE UN STRING BUILDER
     public void getAll() {
         JOptionPane.showMessageDialog(null, getAll(instanceModel().findAll()));
     }
 
+    //    RECIBE UNA LISTA COMO PARAMETRO Y LA CONCATENA EN UN STRING BUILDER PARA LUEGO RETORNARLA
     public StringBuilder getAll(List<Object> objectsList) {
         StringBuilder list = new StringBuilder("Clients List:\n");
         if (objectsList.isEmpty()) {
@@ -95,6 +100,7 @@ public class ClientController {
         return list;
     }
 
+    //    METODO QUE SOLICITA AL USUARIO UN NOMBRE DEL CLIENTE PARA LUEGO ENVIARLO A EL MODELO Y FILTRAR POR ESTE STRING
     public void getByName() {
         String nameSearched = JOptionPane.showInputDialog(null, "Enter the name of the Client you want to search");
         StringBuilder list = new StringBuilder("Filtered by Name: " + nameSearched + "\n");

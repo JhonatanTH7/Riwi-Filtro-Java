@@ -3,6 +3,7 @@ package entity;
 import java.sql.Date;
 
 public class Purchase {
+    //    ENTIDAD CON SUS ATRIBUTOS, CONSTRUCTORES, GETTER, SETTER Y TO-STRING
 
     private int id;
     private Date purchaseDate;

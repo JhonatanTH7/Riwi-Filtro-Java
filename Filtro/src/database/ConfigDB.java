@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class ConfigDB {
     static Connection objConnection = null;
-
+//APERTURA DE CONEXION A LA BASE DE DATOS
     public static Connection openConnection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -22,7 +22,7 @@ public class ConfigDB {
         }
         return objConnection;
     }
-
+//CERRAR LA CONEXION A LA BASE DE DATOS
     public static void closeConnection() {
         try {
             if (objConnection != null) {

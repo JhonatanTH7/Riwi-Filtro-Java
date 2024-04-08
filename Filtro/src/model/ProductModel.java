@@ -17,6 +17,7 @@ import java.util.List;
 public class ProductModel implements CRUD {
     @Override
     public Object insert(Object object) {
+        //        METODO CON CONSULTA SQL PARA AGREGAR UN REGISTRO MEDIANTE UN OBJETO RECIBIDO COMO PARAMETRO
         Product objProduct = (Product) object;
         String sql = "INSERT INTO products(name,stock,price,idStore) VALUES(?,?,?,?);";
         Connection objConnection = ConfigDB.openConnection();
@@ -36,11 +37,13 @@ public class ProductModel implements CRUD {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
         ConfigDB.closeConnection();
+        //        DEVUELVE EL OBJETO GENERADO PARA VERIFICAR SI SE EJECUTO EXITOSAMENTE
         return objProduct;
     }
 
     @Override
     public boolean update(Object object) {
+        //        METODO CON CONSULTA SQL PARA ACTUALIZAR UN REGISTRO MEDIANTE UN OBJETO RECIBIDO COMO PARAMETRO
         Product objProduct = (Product) object;
         boolean isUpdated = false;
         String sql = "UPDATE products SET name = ?, stock = ?, price = ?, idStore = ? WHERE id = ?;";
@@ -59,16 +62,20 @@ public class ProductModel implements CRUD {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
         ConfigDB.closeConnection();
+        //        DEVUELVE BOOLEANO PARA VERIFICAR SI SE EJECUTO EXITOSAMENTE
         return isUpdated;
     }
 
     @Override
     public boolean delete(int id) {
+        //        LLAMADO DE METODO DELETEFROMTABLE ENVIANDO COMO PARAMETROS NOMBRE DE TABLA NOMBRE DE COLUMNA O CAMPO Y EL VALOR A COMPARAR PARA BORRAR
+//        RETORNA BOOLEANO PARA VERIFICAR SI SE EJECUTO EXITOSAMENTE
         return DeleteFromTable.deleteInt("products", "id", id);
     }
 
     @Override
     public List<Object> findAll() {
+        //        METODO QUE LISTA TODOS LOS REGISTROS EXISTENTES EN LA TABLA PERTENECIENTE A LA ENTIDAD
         List<Object> productsList = new ArrayList<>();
         String sql = "SELECT * FROM products ORDER BY id ASC;";
         Connection objConnection = ConfigDB.openConnection();
@@ -81,10 +88,12 @@ public class ProductModel implements CRUD {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
         ConfigDB.closeConnection();
+        //        DESPUÉS DE ALMACENAR LOS OBJETOS EN UNA LISTA LA RETORNA HACIA EL CONTROLLER
         return productsList;
     }
 
     public List<Object> findByName(String nameSearched) {
+        //        METODO PARA FILTRAR LOS PRODUCTOS POR NOMBRE
         String sql = "SELECT * FROM products WHERE name LIKE ?;";
         List<Object> productsList = new ArrayList<>();
         Connection objConnection = ConfigDB.openConnection();
@@ -99,15 +108,35 @@ public class ProductModel implements CRUD {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
         ConfigDB.closeConnection();
+        //        DESPUÉS DE ALMACENAR LOS OBJETOS EN UNA LISTA LA RETORNA HACIA EL CONTROLLER
         return productsList;
     }
 
-    public Store findStore() {
-
-        return null;
+    public Store findStore(int idProduct) {
+//        INNER JOIN UTILIZADO PARA ACCEDER A LOS REGISTROS DE TIENDA
+        Store objStore = null;
+        String sql = "SELECT  products.id AS idProduct,stores.id AS idStore, stores.name AS storeName, stores.location AS storeLocation FROM products INNER JOIN stores ON products.idStore = stores.id WHERE products.id = ?;";
+        Connection objConnection = ConfigDB.openConnection();
+        try {
+            PreparedStatement objPrepare = objConnection.prepareStatement(sql);
+            objPrepare.setInt(1, idProduct);
+            ResultSet objResult = objPrepare.executeQuery();
+            while (objResult.next()) {
+                objStore = new Store();
+                objStore.setId(objResult.getInt("idStore"));
+                objStore.setName(objResult.getString("storeName"));
+                objStore.setLocation(objResult.getString("storeLocation"));
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+        ConfigDB.closeConnection();
+//        DESPUÉS DE EXTRAER LOS VALORES A UN OBJETO STORE LO RETORNA
+        return objStore;
     }
 
     public boolean updateStock(int idProduct, int newStock) {
+//        ACTUALIZA EL STOCK DEL PRODUCTO
         boolean isUpdated = false;
         String sql = "UPDATE products SET stock = ? WHERE id = ?;";
         Connection objConnection = ConfigDB.openConnection();
@@ -122,10 +151,12 @@ public class ProductModel implements CRUD {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
         ConfigDB.closeConnection();
+        //        DEVUELVE BOOLEANO PARA VERIFICAR SI SE EJECUTO EXITOSAMENTE
         return isUpdated;
     }
 
     private Product extractResultSet(ResultSet objResult) throws SQLException {
+        //        RETORNA LA INSTANCIA DE LA ENTIDAD HABIENDO EXTRAÍDO LOS RESULTADOS DEL RESULTSET
         return new Product(objResult.getInt("id"), objResult.getString("name"), objResult.getInt("stock"), objResult.getDouble("price"), objResult.getInt("idStore"));
     }
 }

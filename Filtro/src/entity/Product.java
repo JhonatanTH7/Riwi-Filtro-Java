@@ -1,6 +1,7 @@
 package entity;
 
 public class Product {
+    //    ENTIDAD CON SUS ATRIBUTOS, CONSTRUCTORES, GETTER, SETTER Y TO-STRING
     private int id;
     private String name;
     private int stock;

@@ -1,6 +1,7 @@
 package entity;
 
 public class Client {
+//    ENTIDAD CON SUS ATRIBUTOS, CONSTRUCTORES, GETTER, SETTER Y TO-STRING
     private int id;
     private String name;
     private String lastName;

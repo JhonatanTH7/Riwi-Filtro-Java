@@ -16,6 +16,7 @@ import java.util.List;
 public class ClientModel implements CRUD {
     @Override
     public Object insert(Object object) {
+        //        METODO CON CONSULTA SQL PARA AGREGAR UN REGISTRO MEDIANTE UN OBJETO RECIBIDO COMO PARAMETRO
         Client objClient = (Client) object;
         String sql = "INSERT INTO clients(name,lastName,email) VALUES(?,?,?);";
         Connection objConnection = ConfigDB.openConnection();
@@ -34,11 +35,13 @@ public class ClientModel implements CRUD {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
         ConfigDB.closeConnection();
+        //        DEVUELVE EL OBJETO GENERADO PARA VERIFICAR SI SE EJECUTO EXITOSAMENTE
         return objClient;
     }
 
     @Override
     public boolean update(Object object) {
+        //        METODO CON CONSULTA SQL PARA ACTUALIZAR UN REGISTRO MEDIANTE UN OBJETO RECIBIDO COMO PARAMETRO
         Client objClient = (Client) object;
         boolean isUpdated = false;
         String sql = "UPDATE clients SET name = ?, lastName = ?, email = ? WHERE id = ?;";
@@ -56,16 +59,20 @@ public class ClientModel implements CRUD {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
         ConfigDB.closeConnection();
+        //        DEVUELVE BOOLEANO PARA VERIFICAR SI SE EJECUTO EXITOSAMENTE
         return isUpdated;
     }
 
     @Override
     public boolean delete(int id) {
+        //        LLAMADO DE METODO DELETEFROMTABLE ENVIANDO COMO PARAMETROS NOMBRE DE TABLA NOMBRE DE COLUMNA O CAMPO Y EL VALOR A COMPARAR PARA BORRAR
+//        RETORNA BOOLEANO PARA VERIFICAR SI SE EJECUTO EXITOSAMENTE
         return DeleteFromTable.deleteInt("clients", "id", id);
     }
 
     @Override
     public List<Object> findAll() {
+        //        METODO QUE LISTA TODOS LOS REGISTROS EXISTENTES EN LA TABLA PERTENECIENTE A LA ENTIDAD
         List<Object> clientsList = new ArrayList<>();
         String sql = "SELECT * FROM clients ORDER BY id ASC;";
         Connection objConnection = ConfigDB.openConnection();
@@ -78,10 +85,12 @@ public class ClientModel implements CRUD {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
         ConfigDB.closeConnection();
+        //        DESPUÉS DE ALMACENAR LOS OBJETOS EN UNA LISTA LA RETORNA HACIA EL CONTROLLER
         return clientsList;
     }
 
     public List<Object> findByName(String nameSearched) {
+        //        METODO PARA FILTRAR LOS CLIENTES POR NOMBRE
         String sql = "SELECT * FROM clients WHERE name LIKE ?;";
         List<Object> productsList = new ArrayList<>();
         Connection objConnection = ConfigDB.openConnection();
@@ -96,10 +105,12 @@ public class ClientModel implements CRUD {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
         ConfigDB.closeConnection();
+        //        DESPUÉS DE ALMACENAR LOS OBJETOS EN UNA LISTA LA RETORNA HACIA EL CONTROLLER
         return productsList;
     }
 
     private Client extractResultSet(ResultSet objResult) throws SQLException {
+        //        RETORNA LA INSTANCIA DE LA ENTIDAD HABIENDO EXTRAÍDO LOS RESULTADOS DEL RESULTSET
         return new Client(objResult.getInt("id"), objResult.getString("name"), objResult.getString("lastName"), objResult.getString("email"));
     }
 }

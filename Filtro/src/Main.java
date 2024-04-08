@@ -5,6 +5,7 @@ public class Main {
         Menus menus = new Menus();
         String option;
         do {
+//          REDIRECCIONAMIENTO A MENUS
             option = JOptionPane.showInputDialog(null, """
 
                            MAIN MENU
