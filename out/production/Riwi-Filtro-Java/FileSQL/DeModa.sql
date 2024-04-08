@@ -41,9 +41,11 @@ DROP TABLE products;
 DROP TABLE stores;
 DROP TABLE clients;
 
+INSERT INTO stores(name,location) VALUES("La de manolo", "Sabaneta"),
+("La Iglesia", "Itagui"),
+("Viveritos", "Envigado");
 
-
-SELECT * FROM products;
+SELECT * FROM stores;
 
 
 

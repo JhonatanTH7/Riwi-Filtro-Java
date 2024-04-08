@@ -81,6 +81,24 @@ public class ClientModel implements CRUD {
         return clientsList;
     }
 
+    public List<Object> findByName(String nameSearched) {
+        String sql = "SELECT * FROM clients WHERE name LIKE ?;";
+        List<Object> productsList = new ArrayList<>();
+        Connection objConnection = ConfigDB.openConnection();
+        try {
+            PreparedStatement objPreparedStatement = objConnection.prepareStatement(sql);
+            objPreparedStatement.setString(1, "%" + nameSearched + "%");
+            ResultSet objResult = objPreparedStatement.executeQuery();
+            while (objResult.next()) {
+                productsList.add(extractResultSet(objResult));
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+        ConfigDB.closeConnection();
+        return productsList;
+    }
+
     private Client extractResultSet(ResultSet objResult) throws SQLException {
         return new Client(objResult.getInt("id"), objResult.getString("name"), objResult.getString("lastName"), objResult.getString("email"));
     }

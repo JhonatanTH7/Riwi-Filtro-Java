@@ -17,7 +17,8 @@ public class Menus {
                     2. Add Client
                     3. Update Client
                     4. Delete Client
-                    5. Exit
+                    5. Filter by Name
+                    6. Exit
 
                     Choose an option:
 
@@ -36,13 +37,16 @@ public class Menus {
                     clientController.delete();
                     break;
                 case "5":
+                    clientController.getByName();
+                    break;
+                case "6":
                     JOptionPane.showMessageDialog(null, "Going back to main menu");
                     break;
                 default:
                     JOptionPane.showMessageDialog(null, "Not a valid option");
                     break;
             }
-        } while (!option2.equals("5"));
+        } while (!option2.equals("6"));
     }
 
     public void productsMenu() {
@@ -57,7 +61,8 @@ public class Menus {
                     2. Add Product
                     3. Update Product
                     4. Delete Product
-                    5. Exit
+                    5. Filter by Name
+                    6. Exit
 
                     Choose an option:
 
@@ -76,13 +81,16 @@ public class Menus {
                     productController.delete();
                     break;
                 case "5":
+                    productController.getByName();
+                    break;
+                case "6":
                     JOptionPane.showMessageDialog(null, "Going back to main menu");
                     break;
                 default:
                     JOptionPane.showMessageDialog(null, "Not a valid option");
                     break;
             }
-        } while (!option2.equals("5"));
+        } while (!option2.equals("6"));
     }
 
     public void purchasesMenu() {
@@ -97,7 +105,8 @@ public class Menus {
                     2. Add Purchase
                     3. Update Purchase
                     4. Delete Purchase
-                    5. Exit
+                    5. Filter by Product
+                    6. Exit
 
                     Choose an option:
 
@@ -116,13 +125,16 @@ public class Menus {
                     purchaseController.delete();
                     break;
                 case "5":
+                    purchaseController.getByProduct();
+                    break;
+                case "6":
                     JOptionPane.showMessageDialog(null, "Going back to main menu");
                     break;
                 default:
                     JOptionPane.showMessageDialog(null, "Not a valid option");
                     break;
             }
-        } while (!option2.equals("5"));
+        } while (!option2.equals("6"));
     }
 
 }

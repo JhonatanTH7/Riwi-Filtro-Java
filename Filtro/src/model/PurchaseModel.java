@@ -83,6 +83,24 @@ public class PurchaseModel implements CRUD {
         return purchasesList;
     }
 
+    public List<Object> findByProduct(int productID) {
+        List<Object> resultsList = new ArrayList<>();
+        String sql = "SELECT * FROM purchases WHERE idProduct = ?;";
+        Connection objConnection = ConfigDB.openConnection();
+        try {
+            PreparedStatement objPrepare = objConnection.prepareStatement(sql);
+            objPrepare.setInt(1, productID);
+            ResultSet objResult = objPrepare.executeQuery();
+            while (objResult.next()) {
+                resultsList.add(extractResultSet(objResult));
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+        ConfigDB.closeConnection();
+        return resultsList;
+    }
+
     private Purchase extractResultSet(ResultSet objResult) throws SQLException {
         return new Purchase(objResult.getInt("id"), objResult.getDate("purchaseDate"), objResult.getInt("quantity"), objResult.getInt("idClient"), objResult.getInt("idProduct"));
     }

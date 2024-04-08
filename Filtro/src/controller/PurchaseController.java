@@ -186,4 +186,27 @@ public class PurchaseController {
         }
         return list;
     }
+
+    public void getByProduct() {
+        Object[] flightOptions = new ProductModel().findAll().toArray();
+        if (flightOptions.length > 0) {
+            Product selectedProduct = (Product) JOptionPane.showInputDialog(
+                    null,
+                    "Select the Product to filter by:\n",
+                    "Selecting the Product",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    flightOptions,
+                    flightOptions[0]);
+            if (selectedProduct == null) {
+                JOptionPane.showMessageDialog(null, "No Flight selected");
+            } else {
+                StringBuilder list = new StringBuilder("Filtered by Product: " + selectedProduct.getName() + "\n");
+                list.append(getAll(instanceModel().findByProduct(selectedProduct.getId())));
+                JOptionPane.showMessageDialog(null, list);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No Flights found");
+        }
+    }
 }

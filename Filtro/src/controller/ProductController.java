@@ -105,4 +105,11 @@ public class ProductController {
         }
         return list;
     }
+
+    public void getByName() {
+        String nameSearched = JOptionPane.showInputDialog(null, "Enter the name of the product you want to search");
+        StringBuilder list = new StringBuilder("Filtered by Name: " + nameSearched + "\n");
+        list.append(getAll(instanceModel().findByName(nameSearched)));
+        JOptionPane.showMessageDialog(null, list);
+    }
 }
