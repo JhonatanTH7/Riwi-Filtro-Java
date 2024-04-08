@@ -24,7 +24,7 @@ ALTER TABLE products ADD COLUMN stock INT NOT NUll;
 
 CREATE TABLE purchases (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    purchaseDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    purchaseDate DATE NOT NULL,
     quantity INT NOT NULL,
     idClient INT,
     idProduct INT,
@@ -43,7 +43,7 @@ DROP TABLE clients;
 
 
 
-
+SELECT * FROM products;
 
 
 
