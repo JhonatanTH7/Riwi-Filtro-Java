@@ -19,7 +19,6 @@ public class PurchaseController {
     public void add() {
         try {
             Date purchaseDate = Date.valueOf(JOptionPane.showInputDialog(null, "Enter the Date of the Purchase (YYYY-MM-DD)"));
-            int quantity = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the Quantity of the Purchase"));
 
             Object[] clientOptions = new ClientModel().findAll().toArray();
             Object[] productOptions = new ProductModel().findAll().toArray();
@@ -39,7 +38,7 @@ public class PurchaseController {
                     if (productOptions.length > 0) {
                         Product selectedProduct = (Product) JOptionPane.showInputDialog(
                                 null,
-                                "Select the Product:\n",
+                                "Select the Product to Purchase:\n",
                                 "Selecting a Product",
                                 JOptionPane.QUESTION_MESSAGE,
                                 null,
@@ -48,7 +47,17 @@ public class PurchaseController {
                         if (selectedProduct == null) {
                             JOptionPane.showMessageDialog(null, "No Product selected");
                         } else {
-                            System.out.println(instanceModel().insert(new Purchase(purchaseDate, quantity, selectedClient.getId(), selectedProduct.getId())));
+                            int quantity = Integer.parseInt(JOptionPane.showInputDialog(null, "Enter the Quantity of the Purchase >> Actual Stock: " + selectedProduct.getStock()));
+                            if (selectedProduct.getStock() >= quantity) {
+                                System.out.println(instanceModel().insert(new Purchase(purchaseDate, quantity, selectedClient.getId(), selectedProduct.getId())));
+                                if (new ProductModel().updateStock(selectedProduct.getId(), (selectedProduct.getStock() - quantity))) {
+                                    JOptionPane.showMessageDialog(null, "Stock updated successfully");
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Couldn't update the Stock");
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "There is not enough Stock of the Product you want to Purchase >> Actual Stock: " + selectedProduct.getStock());
+                            }
                         }
                     } else {
                         JOptionPane.showMessageDialog(null, "No Products registered yet");

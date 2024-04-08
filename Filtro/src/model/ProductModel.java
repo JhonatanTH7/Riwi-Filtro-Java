@@ -4,6 +4,7 @@ import Utils.DeleteFromTable;
 import database.CRUD;
 import database.ConfigDB;
 import entity.Product;
+import entity.Store;
 
 import javax.swing.*;
 import java.sql.Connection;
@@ -99,6 +100,29 @@ public class ProductModel implements CRUD {
         }
         ConfigDB.closeConnection();
         return productsList;
+    }
+
+    public Store findStore() {
+
+        return null;
+    }
+
+    public boolean updateStock(int idProduct, int newStock) {
+        boolean isUpdated = false;
+        String sql = "UPDATE products SET stock = ? WHERE id = ?;";
+        Connection objConnection = ConfigDB.openConnection();
+        try {
+            PreparedStatement objPrepare = objConnection.prepareStatement(sql);
+            objPrepare.setInt(1, newStock);
+            objPrepare.setInt(2, idProduct);
+            if (objPrepare.executeUpdate() > 0) {
+                isUpdated = true;
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+        ConfigDB.closeConnection();
+        return isUpdated;
     }
 
     private Product extractResultSet(ResultSet objResult) throws SQLException {
