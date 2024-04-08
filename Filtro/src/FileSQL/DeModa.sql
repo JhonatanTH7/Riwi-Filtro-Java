@@ -1,7 +1,7 @@
 CREATE TABLE stores (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
-    ubication VARCHAR(255)
+    location VARCHAR(255)
 );
 
 CREATE TABLE clients (
@@ -20,10 +20,11 @@ CREATE TABLE products (
         REFERENCES stores (id)
         ON DELETE CASCADE
 );
+ALTER TABLE products ADD COLUMN stock INT NOT NUll;
 
 CREATE TABLE purchases (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    purchaseDate DATE NOT NULL,
+    purchaseDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     quantity INT NOT NULL,
     idClient INT,
     idProduct INT,
