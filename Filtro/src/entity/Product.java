@@ -3,21 +3,24 @@ package entity;
 public class Product {
     private int id;
     private String name;
+    private int stock;
     private double price;
     private int idStore;
 
     public Product() {
     }
 
-    public Product(String name, double price, int idStore) {
+    public Product(String name, int stock, double price, int idStore) {
         this.name = name;
+        this.stock = stock;
         this.price = price;
         this.idStore = idStore;
     }
 
-    public Product(int id, String name, double price, int idStore) {
+    public Product(int id, String name, int stock, double price, int idStore) {
         this.id = id;
         this.name = name;
+        this.stock = stock;
         this.price = price;
         this.idStore = idStore;
     }
@@ -36,6 +39,14 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 
     public double getPrice() {
@@ -58,7 +69,8 @@ public class Product {
     public String toString() {
         return
                 "  - ID: " + id +
-                        "  Name: " + name + '\'' +
+                        "  Name: " + name +
+                        "  Stock: " + stock +
                         "  Price: " + price +
                         "  StoreID: " + idStore;
     }

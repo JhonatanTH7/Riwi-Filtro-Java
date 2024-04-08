@@ -17,13 +17,14 @@ public class ProductModel implements CRUD {
     @Override
     public Object insert(Object object) {
         Product objProduct = (Product) object;
-        String sql = "INSERT INTO products(name,price,idStore) VALUES(?,?,?);";
+        String sql = "INSERT INTO products(name,stock,price,idStore) VALUES(?,?,?,?);";
         Connection objConnection = ConfigDB.openConnection();
         try {
             PreparedStatement objPrepare = objConnection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             objPrepare.setString(1, objProduct.getName());
-            objPrepare.setDouble(2, objProduct.getPrice());
-            objPrepare.setInt(3, objProduct.getIdStore());
+            objPrepare.setInt(2, objProduct.getStock());
+            objPrepare.setDouble(3, objProduct.getPrice());
+            objPrepare.setInt(4, objProduct.getIdStore());
             objPrepare.execute();
             ResultSet objResult = objPrepare.getGeneratedKeys();
             while (objResult.next()) {
@@ -41,14 +42,15 @@ public class ProductModel implements CRUD {
     public boolean update(Object object) {
         Product objProduct = (Product) object;
         boolean isUpdated = false;
-        String sql = "UPDATE products SET name = ?, price = ?, idStore = ? WHERE id = ?;";
+        String sql = "UPDATE products SET name = ?, stock = ?, price = ?, idStore = ? WHERE id = ?;";
         Connection objConnection = ConfigDB.openConnection();
         try {
             PreparedStatement objPrepare = objConnection.prepareStatement(sql);
             objPrepare.setString(1, objProduct.getName());
-            objPrepare.setDouble(2, objProduct.getPrice());
-            objPrepare.setInt(3, objProduct.getIdStore());
-            objPrepare.setInt(4, objProduct.getId());
+            objPrepare.setInt(2, objProduct.getStock());
+            objPrepare.setDouble(3, objProduct.getPrice());
+            objPrepare.setInt(4, objProduct.getIdStore());
+            objPrepare.setInt(5, objProduct.getId());
             if (objPrepare.executeUpdate() > 0) {
                 isUpdated = true;
             }
@@ -82,6 +84,6 @@ public class ProductModel implements CRUD {
     }
 
     private Product extractResultSet(ResultSet objResult) throws SQLException {
-        return new Product(objResult.getInt("id"), objResult.getString("name"), objResult.getDouble("price"), objResult.getInt("idStore"));
+        return new Product(objResult.getInt("id"), objResult.getString("name"), objResult.getInt("stock"), objResult.getDouble("price"), objResult.getInt("idStore"));
     }
 }
